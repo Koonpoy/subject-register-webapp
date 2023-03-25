@@ -1,0 +1,139 @@
+{% extends "layouts/base_select_subject.html" %}
+
+{% block title %} Schedule of {{request.user.username}} {% endblock %}
+
+{% block content %}
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% load custom_tags %}
+
+<style>
+    * {
+        font-family: FC Paragraph;
+    }
+
+    body {
+        margin: 0;
+        font-family: FC Paragraph;
+        font-size: 17px;
+        color: #000000;
+        background-color: #FEE8D8ff;
+    }
+</style>
+
+<div class="box">
+    <div class="container">
+        <section id="section-b">
+            <p>Schedule</p>
+        </section>
+        <h1> แสดงรายชื่อวิชา และ จำนวน นศ. ที่ลงวิชานั้น </h1>
+
+        <div class="table-responsive">
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr class="bg-light-gray">
+                        <th class="text-uppercase">วิชา</th>
+                        <th class="text-uppercase">จำนวนคนที่ลง</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-light-gray">  
+                        
+                        {%for sub in sub_objects%}
+       
+                        {%if user_all|count:sub.id != 0 %}
+                        <tr class="bg-light-gray">  
+                        <th class="text-uppercase">{{sub.name}}</th>
+                        <th class="text-uppercase">{{user_all|count:sub.id}}</th>
+                        </tr>
+                        {%endif%}
+                        {%endfor%} 
+                       
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- วิชาที่สามารถลงได้ในเทอมนี้ -->
+
+       <section id="section-a">
+
+             <!-- ค้นหาวิชา -->
+             <section id="section-a">
+
+                <h1> ค้นหาวิชา เพื่อดูรายชื่อนักศึกษา </h1>
+    
+                <section id="section-d">
+                    <form class="search-field">
+                        <section id="section-c">
+                            <input class="form-control" name="search_btn" type="search" placeholder="Search" aria-label="Search">
+                            <button class="search_btn" type="submit">Search</button>
+                        </section>
+                    </form>
+                </section>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center">
+                        <thead>
+                            <tr class="bg-light-gray">
+                                <th class="text-uppercase">วิชา</th>
+                                <th class="text-uppercase">รายชื่อ นศ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-light-gray">  
+                                
+                                {%for row in sub_name %}
+                                <tr class="bg-light-gray"> 
+                                <th class="text-uppercase">{{row.name}}</th>
+                                
+                                {%for user in user_all %}
+                                {% if user.sub_id.id == row.id and forloop.first %}
+                                <th class="text-uppercase">{{user.user_id.username}}</th>
+                                {%elif user.sub_id.id == row.id  %}
+                                <tr class="bg-light-gray"> 
+                                    <th class="text-uppercase"></th><th class="text-uppercase">{{user.user_id.username}}</th>
+                                </tr>
+                                {%endif%}
+                                {%endfor%} 
+                                </tr>
+                                {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+    
+            </section>
+            
+
+
+        <!-- go on top button -->
+        <button id="go-top-button" onclick="goToTop()"></button>
+        
+        <script>
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function () { scrollFunction() };
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById("go-top-button").style.display = "block";
+                } else {
+                    document.getElementById("go-top-button").style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function goToTop() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+        </script>
+
+    </div>
+</div>
+
+
+
+{% endblock %}
